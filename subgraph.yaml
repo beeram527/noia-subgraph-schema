@@ -1,0 +1,29 @@
+specVersion: 0.0.2
+description: Fetches the user staked balances on the NOIA protocol.
+repository: https://github.com/beeram527/noia-subgraph-schema.git
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: NOIA
+    network: mainnet
+    source:
+      address: '0xfc858154C0b2c4A3323046Fb505811F110EBdA57'
+      abi: NOIA
+      startBlock: 10861674
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - User
+        - LiquidityPosition
+      abis:
+        - name: NOIA
+          file: ./abis/noia.json
+      eventHandlers:
+        - event: Withdraw(indexed address,indexed uint256,uint256)
+          handler: handleDeposit
+        - event: Deposit(indexed address,indexed uint256,uint256)
+          handler: handleWithdraw
+      file: ./src/mapping.ts
